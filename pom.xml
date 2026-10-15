@@ -36,7 +36,7 @@
   </dependencies>
   <build>
     <directory>${project.basedir}/target</directory>
-    <finalName>example-java-project</finalName>
+    <finalName>hst_01</finalName>
     <resources>
       <resource>
         <filtering>true</filtering>
