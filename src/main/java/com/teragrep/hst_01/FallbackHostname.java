@@ -51,11 +51,11 @@ import java.util.Objects;
 public final class FallbackHostname implements Hostname {
 
     private final Hostname origin;
-    private final String defaultHostname;
+    private final String fallbackHostname;
 
-    public FallbackHostname(final Hostname origin, final String defaultHostname) {
+    public FallbackHostname(final Hostname origin, final String fallbackHostname) {
         this.origin = origin;
-        this.defaultHostname = defaultHostname;
+        this.fallbackHostname = fallbackHostname;
     }
 
     /**
@@ -70,7 +70,7 @@ public final class FallbackHostname implements Hostname {
             rv = origin.asString();
         }
         catch (final UnknownHostException e) {
-            rv = defaultHostname;
+            rv = fallbackHostname;
         }
         return rv;
     }
@@ -86,13 +86,13 @@ public final class FallbackHostname implements Hostname {
         }
         else {
             final FallbackHostname that = (FallbackHostname) o;
-            equals = Objects.equals(origin, that.origin) && Objects.equals(defaultHostname, that.defaultHostname);
+            equals = Objects.equals(origin, that.origin) && Objects.equals(fallbackHostname, that.fallbackHostname);
         }
         return equals;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(origin, defaultHostname);
+        return Objects.hash(origin, fallbackHostname);
     }
 }
