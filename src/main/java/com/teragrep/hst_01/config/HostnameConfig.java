@@ -46,7 +46,6 @@
 package com.teragrep.hst_01.config;
 
 import com.teragrep.hst_01.FallbackHostname;
-import com.teragrep.hst_01.Hostname;
 import com.teragrep.hst_01.HostnameImpl;
 
 import java.util.Objects;
@@ -63,7 +62,7 @@ public final class HostnameConfig {
         this.hostname = new FallbackHostname(new HostnameImpl(), fallbackHostname);
     }
 
-    public Hostname hostname() {
+    public FallbackHostname hostname() {
         return hostname;
     }
 
