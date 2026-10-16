@@ -3,33 +3,71 @@
 // 2. Update the issues link in Contributing section in the readme file
 // 3. Update the discussion link in config.yml file in .github/ISSUE_TEMPLATE directory
 
-= repo-template
+= Fallback hostname library for Java
 
 // Add a short description of your project. Tell what your project does and what it's used for.
 
-This is a template repository for Teragrep organization.
+This is a simple library providing objects and methods that can be used for retrieving the name of the local host, or providing a default fallback if host name cannot be retreived.
+It provides an interface and a default implementation for use in other projects, where the local host name should be retrieved.
 
 == Features
 
 // List your project's features
+- Exposes an interface for Hostname objects
+- Includes a Hostname implementation that retrieves local host name automatically, or throws an exception when failing to do so
+- Includes a decorator that adds functionality to a Hostname object by providing a fallback value if host name cannot be retrieved automatically
+- Includes a configuration object that can be used to pass a configured fallback hostname to a default implementation, where in case host name cannot be retrieved, the configured fallback is used instead of an exception being thrown
 
 == Documentation
 
 See the official documentation on https://docs.teragrep.com[docs.teragrep.com].
 
-== Limitations
+== How to compile
 
-// If your project has limitations, please list them. Otherwise remove this section.
+[source,bash]
+----
+mvn clean package
+----
 
-== How to [compile/use/implement]
+== How to use
+=== Requirements
+
+- Java version 8 or higher
+- Maven
 
 // add instructions how people can start to use your project
+=== Installation
+
+Include the following dependency into your projects pom.xml file:
+
+    <dependency>
+      <groupId>com.teragrep</groupId>
+      <artifactId>hst_01</artifactId>
+    </dependency>
+
+=== Usage
+Instantiate a default Hostname object via HostnameConfig and call .asString() to retrieve the host name or fallback value:
+[source,java]
+----
+HostnameConfig config = new HostnameConfig("defaultHostname");
+FallbackHostname fallbackHostname = config.hostname();
+String hostname = fallbackHostname.asString();
+----
+
+You may also implement the provided Hostname interface:
+[source,java]
+----
+import com.teragrep.hst_01.Hostname;
+public class CustomHostname implements Hostname {
+    // Implement CustomHostname here
+}
+----
 
 == Contributing
 
 // Change the repository name in the issues link to match with your project's name
 
-You can involve yourself with our project by https://github.com/teragrep/repo-template/issues/new/choose[opening an issue] or submitting a pull request.
+You can involve yourself with our project by https://github.com/teragrep/hst-01/issues/new/choose[opening an issue] or submitting a pull request.
 
 Contribution requirements:
 
