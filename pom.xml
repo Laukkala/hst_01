@@ -8,6 +8,25 @@
   <name>hst_01</name>
   <description>Fallback hostname library for Java</description>
   <url>https://teragrep.com</url>
+  <licenses>
+    <license>
+      <name>GNU Affero General Public License v3.0</name>
+      <url>https://github.com/teragrep/teragrep/blob/main/LICENSE</url>
+    </license>
+  </licenses>
+  <developers>
+    <developer>
+      <name>Lassi Laukkarinen</name>
+      <email>52@teragrep.com</email>
+      <organization>Teragrep</organization>
+      <organizationUrl>https://teragrep.com</organizationUrl>
+    </developer>
+  </developers>
+  <scm>
+    <connection>scm:git:https://github.com/teragrep/hst_01.git</connection>
+    <developerConnection>scm:git:git@github.com:teragrep/hst_01.git</developerConnection>
+    <url>https://github.com/teragrep/hst_01/tree/master</url>
+  </scm>
   <properties>
     <changelist>-SNAPSHOT</changelist>
     <java.version>1.8</java.version>
@@ -44,6 +63,60 @@
       </resource>
     </resources>
     <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-source-plugin</artifactId>
+        <version>3.3.0</version>
+        <executions>
+          <execution>
+            <id>attach-sources</id>
+            <goals>
+              <goal>jar-no-fork</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-javadoc-plugin</artifactId>
+        <version>3.5.0</version>
+        <executions>
+          <execution>
+            <id>attach-javadocs</id>
+            <goals>
+              <goal>jar</goal>
+            </goals>
+            <configuration>
+              <source>8</source>
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.1.0</version>
+        <configuration>
+          <updatePomFile>true</updatePomFile>
+          <flattenMode>bom</flattenMode>
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten.clean</id>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+            <phase>clean</phase>
+          </execution>
+          <execution>
+            <id>flatten</id>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+            <phase>process-resources</phase>
+          </execution>
+        </executions>
+      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-enforcer-plugin</artifactId>
@@ -169,6 +242,7 @@
             <exclude>settings.xml</exclude>
             <!-- maven -->
             <exclude>pom.xml</exclude>
+            <exclude>.flattened-pom.xml</exclude>
             <exclude>eclipse-java-formatter.xml</exclude>
             <!-- readme -->
             <exclude>README.adoc</exclude>
@@ -194,4 +268,56 @@
       </plugin>
     </plugins>
   </build>
+  <profiles>
+    <profile>
+      <id>publish-maven-central</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.sonatype.central</groupId>
+            <artifactId>central-publishing-maven-plugin</artifactId>
+            <version>0.5.0</version>
+            <extensions>true</extensions>
+            <configuration>
+              <publishingServerId>central-sonatype-org</publishingServerId>
+              <tokenAuth>true</tokenAuth>
+              <autoPublish>true</autoPublish>
+              <waitUntil>validated</waitUntil>
+            </configuration>
+          </plugin>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-gpg-plugin</artifactId>
+            <version>1.6</version>
+            <executions>
+              <execution>
+                <id>sign-artifacts</id>
+                <goals>
+                  <goal>sign</goal>
+                </goals>
+                <phase>verify</phase>
+                <configuration>
+                  <gpgArguments>
+                    <arg>--pinentry-mode</arg>
+                    <arg>loopback</arg>
+                  </gpgArguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+    <profile>
+      <id>publish-github-packages</id>
+      <distributionManagement>
+        <repository>
+          <id>github</id>
+          <name>GitHub Packages</name>
+          <url>https://maven.pkg.github.com/teragrep/hst_01</url>
+        </repository>
+      </distributionManagement>
+    </profile>
+    <!-- Required when publishing to GitHub Packages -->
+  </profiles>
 </project>
